@@ -14,6 +14,7 @@ app.get("/api/krw-to-usd", async (_req: Request, res: Response) => {
     const { data } = await axios.get(`${API_BASE}/convert`, {
       params: { from: "KRW", to: "USD" },
     });
+    console.log("환율 응답 결과 (KRW→USD):", data); // ★ 로그 추가
     res.send(String(data.result));
   } catch {
     res.status(500).send("ERROR: KRW to USD");
@@ -26,6 +27,7 @@ app.get("/api/krw-to-eur", async (_req: Request, res: Response) => {
     const { data } = await axios.get(`${API_BASE}/convert`, {
       params: { from: "KRW", to: "EUR" },
     });
+    console.log("환율 응답 결과 (KRW→EUR):", data);
     res.send(String(data.result));
   } catch {
     res.status(500).send("ERROR: KRW to EUR");
@@ -38,6 +40,7 @@ app.get("/api/usd-to-kgs", async (_req: Request, res: Response) => {
     const { data } = await axios.get(`${API_BASE}/convert`, {
       params: { from: "USD", to: "KGS" },
     });
+    console.log("환율 응답 결과 (USD→KGS):", data);
     res.send(String(data.result));
   } catch {
     res.status(500).send("ERROR: USD to KGS");
@@ -50,6 +53,7 @@ app.get("/api/eur-to-rub", async (_req: Request, res: Response) => {
     const { data } = await axios.get(`${API_BASE}/convert`, {
       params: { from: "EUR", to: "RUB" },
     });
+    console.log("환율 응답 결과 (EUR→RUB):", data);
     res.send(String(data.result));
   } catch {
     res.status(500).send("ERROR: EUR to RUB");
@@ -62,6 +66,7 @@ app.get("/api/usd-to-rub", async (_req: Request, res: Response) => {
     const { data } = await axios.get(`${API_BASE}/convert`, {
       params: { from: "USD", to: "RUB" },
     });
+    console.log("환율 응답 결과 (USD→RUB):", data);
     res.send(String(data.result));
   } catch {
     res.status(500).send("ERROR: USD to RUB");
@@ -74,6 +79,7 @@ app.get("/api/krw-to-kgs", async (_req: Request, res: Response) => {
     const { data } = await axios.get(`${API_BASE}/convert`, {
       params: { from: "KRW", to: "KGS" },
     });
+    console.log("환율 응답 결과 (KRW→KGS):", data);
     res.send(String(data.result));
   } catch {
     res.status(500).send("ERROR: KRW to KGS");
