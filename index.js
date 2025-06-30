@@ -8,16 +8,15 @@ app.use(cors());
 const PORT = process.env.PORT || 3000;
 const API_BASE = "https://api.exchangerate.host/latest";
 
-// 환율 계산 함수 (자동으로 1 나누기 처리)
+// 환율 계산 함수 (정방향으로)
 async function getRate(from, to) {
   try {
     const response = await axios.get(API_BASE, {
-      params: { base: to, symbols: from },
+      params: { base: from, symbols: to },
     });
-    const raw = response.data?.rates?.[from];
-    const rate = raw ? 1 / raw : null;
-    console.log(`[${from} → ${to}] 계산: 1 / ${raw} = ${rate}`);
-    return rate;
+    const raw = response.data?.rates?.[to];
+    console.log(`[${from} → ${to}] 응답: ${raw}`);
+    return raw;
   } catch (err) {
     console.error(`[${from} → ${to}] 오류:`, err);
     return null;
@@ -57,7 +56,6 @@ app.get("/api/krw-to-kgs", async (_req, res) => {
   combined ? res.send(combined.toString()) : res.status(500).send("ERROR");
 });
 
-// ✅ 서버 실행
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
 });
