@@ -1,22 +1,85 @@
 import express, { Request, Response } from "express";
 import axios from "axios";
-import { XMLParser } from "fast-xml-parser";
+import cors from "cors";
 
 const app = express();
+app.use(cors());
 
-// 예시: EUR → RUB
-app.get("/api/eur-to-rub", async (req: Request, res: Response) => {
+const PORT = process.env.PORT || 3000;
+const API_BASE = "https://api.exchangerate.host"; // 무료 환율 API
+
+// 1. 원 → 달러
+app.get("/api/krw-to-usd", async (req: Request, res: Response) => {
   try {
-    const response = await axios.get("https://www.cbr-xml-daily.ru/daily_json.js");
-    const rate = response.data.Valute.EUR.Value;
-    res.json({ rate });
-  } catch (e) {
-    res.status(500).json({ error: "Failed to fetch EUR to RUB" });
+    const { data } = await axios.get(`${API_BASE}/convert`, {
+      params: { from: "KRW", to: "USD" },
+    });
+    res.json({ rate: data.result });
+  } catch {
+    res.status(500).json({ error: "KRW to USD 실패" });
   }
 });
 
-// 여기에 다른 API도 이어서 추가하면 돼
+// 2. 원 → 유로
+app.get("/api/krw-to-eur", async (req: Request, res: Response) => {
+  try {
+    const { data } = await axios.get(`${API_BASE}/convert`, {
+      params: { from: "KRW", to: "EUR" },
+    });
+    res.json({ rate: data.result });
+  } catch {
+    res.status(500).json({ error: "KRW to EUR 실패" });
+  }
+});
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+// 3. 달러 → 솜
+app.get("/api/usd-to-kgs", async (req: Request, res: Response) => {
+  try {
+    const { data } = await axios.get(`${API_BASE}/convert`, {
+      params: { from: "USD", to: "KGS" }, // KGS = 키르기스스탄 솜
+    });
+    res.json({ rate: data.result });
+  } catch {
+    res.status(500).json({ error: "USD to KGS 실패" });
+  }
+});
+
+// 4. 유로 → 루블
+app.get("/api/eur-to-rub", async (req: Request, res: Response) => {
+  try {
+    const { data } = await axios.get(`${API_BASE}/convert`, {
+      params: { from: "EUR", to: "RUB" },
+    });
+    res.json({ rate: data.result });
+  } catch {
+    res.status(500).json({ error: "EUR to RUB 실패" });
+  }
+});
+
+// 5. 달러 → 루블
+app.get("/api/usd-to-rub", async (req: Request, res: Response) => {
+  try {
+    const { data } = await axios.get(`${API_BASE}/convert`, {
+      params: { from: "USD", to: "RUB" },
+    });
+    res.json({ rate: data.result });
+  } catch {
+    res.status(500).json({ error: "USD to RUB 실패" });
+  }
+});
+
+// 6. 원 → 솜
+app.get("/api/krw-to-kgs", async (req: Request, res: Response) => {
+  try {
+    const { data } = await axios.get(`${API_BASE}/convert`, {
+      params: { from: "KRW", to: "KGS" },
+    });
+    res.json({ rate: data.result });
+  } catch {
+    res.status(500).json({ error: "KRW to KGS 실패" });
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
 });
