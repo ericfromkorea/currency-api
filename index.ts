@@ -6,77 +6,77 @@ const app = express();
 app.use(cors());
 
 const PORT = process.env.PORT || 3000;
-const API_BASE = "https://api.exchangerate.host"; // 무료 환율 API
+const API_BASE = "https://api.exchangerate.host";
 
-// 1. 원 → 달러
-app.get("/api/krw-to-usd", async (req: Request, res: Response) => {
+// ✅ 1. 원 → 달러
+app.get("/api/krw-to-usd", async (_req: Request, res: Response) => {
   try {
     const { data } = await axios.get(`${API_BASE}/convert`, {
       params: { from: "KRW", to: "USD" },
     });
-    res.json({ rate: data.result });
+    res.send(String(data.result));
   } catch {
-    res.status(500).json({ error: "KRW to USD 실패" });
+    res.status(500).send("ERROR: KRW to USD");
   }
 });
 
-// 2. 원 → 유로
-app.get("/api/krw-to-eur", async (req: Request, res: Response) => {
+// ✅ 2. 원 → 유로
+app.get("/api/krw-to-eur", async (_req: Request, res: Response) => {
   try {
     const { data } = await axios.get(`${API_BASE}/convert`, {
       params: { from: "KRW", to: "EUR" },
     });
-    res.json({ rate: data.result });
+    res.send(String(data.result));
   } catch {
-    res.status(500).json({ error: "KRW to EUR 실패" });
+    res.status(500).send("ERROR: KRW to EUR");
   }
 });
 
-// 3. 달러 → 솜
-app.get("/api/usd-to-kgs", async (req: Request, res: Response) => {
+// ✅ 3. 달러 → 솜 (KGS)
+app.get("/api/usd-to-kgs", async (_req: Request, res: Response) => {
   try {
     const { data } = await axios.get(`${API_BASE}/convert`, {
-      params: { from: "USD", to: "KGS" }, // KGS = 키르기스스탄 솜
+      params: { from: "USD", to: "KGS" },
     });
-    res.json({ rate: data.result });
+    res.send(String(data.result));
   } catch {
-    res.status(500).json({ error: "USD to KGS 실패" });
+    res.status(500).send("ERROR: USD to KGS");
   }
 });
 
-// 4. 유로 → 루블
-app.get("/api/eur-to-rub", async (req: Request, res: Response) => {
+// ✅ 4. 유로 → 루블
+app.get("/api/eur-to-rub", async (_req: Request, res: Response) => {
   try {
     const { data } = await axios.get(`${API_BASE}/convert`, {
       params: { from: "EUR", to: "RUB" },
     });
-    res.json({ rate: data.result });
+    res.send(String(data.result));
   } catch {
-    res.status(500).json({ error: "EUR to RUB 실패" });
+    res.status(500).send("ERROR: EUR to RUB");
   }
 });
 
-// 5. 달러 → 루블
-app.get("/api/usd-to-rub", async (req: Request, res: Response) => {
+// ✅ 5. 달러 → 루블
+app.get("/api/usd-to-rub", async (_req: Request, res: Response) => {
   try {
     const { data } = await axios.get(`${API_BASE}/convert`, {
       params: { from: "USD", to: "RUB" },
     });
-    res.json({ rate: data.result });
+    res.send(String(data.result));
   } catch {
-    res.status(500).json({ error: "USD to RUB 실패" });
+    res.status(500).send("ERROR: USD to RUB");
   }
 });
 
-// 6. 원 → 솜
-app.get("/api/krw-to-kgs", async (req: Request, res: Response) => {
+// ✅ 6. 원 → 솜
+app.get("/api/krw-to-kgs", async (_req: Request, res: Response) => {
   try {
     const { data } = await axios.get(`${API_BASE}/convert`, {
       params: { from: "KRW", to: "KGS" },
     });
-    res.json({ rate: data.result });
+    res.send(String(data.result));
   } catch {
-    res.status(500).json({ error: "KRW to KGS 실패" });
+    res.status(500).send("ERROR: KRW to KGS");
   }
 });
 
