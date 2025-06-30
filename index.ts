@@ -1,18 +1,22 @@
+import express, { Request, Response } from "express";
+import axios from "axios";
 import { XMLParser } from "fast-xml-parser";
 
-app.get("/api/usd-to-kgs", async (req, res) => {
+const app = express();
+
+// 예시: EUR → RUB
+app.get("/api/eur-to-rub", async (req: Request, res: Response) => {
   try {
-    const { data } = await axios.get("https://kgcentralbank.org.kg/rss/kgs.xml");
-
-    const parser = new XMLParser({ ignoreAttributes: false });
-    const parsed = parser.parse(data);
-
-    const items = parsed.rss.channel.item;
-    const usdItem = items.find((item: any) => item.title.includes("USD"));
-    const rate = parseFloat(usdItem.description.replace(",", "."));
-
+    const response = await axios.get("https://www.cbr-xml-daily.ru/daily_json.js");
+    const rate = response.data.Valute.EUR.Value;
     res.json({ rate });
   } catch (e) {
-    res.status(500).json({ error: "Failed to fetch USD to KGS" });
+    res.status(500).json({ error: "Failed to fetch EUR to RUB" });
   }
+});
+
+// 여기에 다른 API도 이어서 추가하면 돼
+
+app.listen(3000, () => {
+  console.log("Server is running on port 3000");
 });
