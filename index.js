@@ -1,4 +1,3 @@
-// ✅ Frankfurter API 기반 환율 API 서버 (API Key 불필요)
 import express from "express";
 import axios from "axios";
 import cors from "cors";
@@ -10,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 const API_BASE = "https://api.frankfurter.app/latest";
 
 // ✅ 공통 요청 함수
-const fetchRate = async (from: string, to: string): Promise<number | null> => {
+const fetchRate = async (from, to) => {
   try {
     const response = await axios.get(API_BASE, {
       params: { from, to }
