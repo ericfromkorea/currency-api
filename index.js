@@ -8,22 +8,27 @@ app.use(cors());
 const PORT = process.env.PORT || 3000;
 const API_BASE = "https://api.exchangerate.host/latest";
 
-// 환율 불러오는 함수
-async function getRate(base, target) {
+// ⚡ from → to 환율 계산 (필요하면 자동으로 1 나누기)
+async function getRate(from, to) {
   try {
+    // 환율 API는 base=to, symbols=from 으로 요청
     const response = await axios.get(API_BASE, {
-      params: { base, symbols: target }
+      params: { base: to, symbols: from },
     });
-    const rate = response.data?.rates?.[target];
-    console.log(`[${base} → ${target}] 응답:`, rate);
-    return typeof rate === "number" ? rate : null;
+    const raw = response.data?.rates?.[from];
+
+    if (typeof raw !== "number") return null;
+
+    const rate = 1 / raw;
+    console.log(`[${from} → ${to}] 계산: 1 / ${raw} = ${rate}`);
+    return rate;
   } catch (err) {
-    console.error(`[${base} → ${target}] 오류:`, err);
+    console.error(`[${from} → ${to}] 오류:`, err);
     return null;
   }
 }
 
-// 라우터
+// 📡 라우터 설정
 app.get("/api/krw-to-usd", async (_req, res) => {
   const rate = await getRate("KRW", "USD");
   rate ? res.send(rate.toString()) : res.status(500).send("ERROR");
@@ -41,19 +46,4 @@ app.get("/api/usd-to-kgs", async (_req, res) => {
 
 app.get("/api/eur-to-rub", async (_req, res) => {
   const rate = await getRate("EUR", "RUB");
-  rate ? res.send(rate.toString()) : res.status(500).send("ERROR");
-});
-
-app.get("/api/usd-to-rub", async (_req, res) => {
-  const rate = await getRate("USD", "RUB");
-  rate ? res.send(rate.toString()) : res.status(500).send("ERROR");
-});
-
-app.get("/api/krw-to-kgs", async (_req, res) => {
-  const rate = await getRate("KRW", "KGS");
-  rate ? res.send(rate.toString()) : res.status(500).send("ERROR");
-});
-
-app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
-});
+  rate ? res.send(rate.toString()) : res.status(500)
